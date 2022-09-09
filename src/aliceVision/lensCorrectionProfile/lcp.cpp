@@ -3,10 +3,11 @@
 #include "boost/filesystem.hpp"
 #include "boost/algorithm/string.hpp"
 
-#include <aliceVision/numeric/numeric.hpp>
-
 #include <expat.h>
 #include "lcp.hpp"
+
+//#include <aliceVision/numeric/numeric.hpp>
+
 
 template<typename T>
 constexpr T interpolate(T a, T b, T c)
@@ -1056,35 +1057,29 @@ bool findLCPInfo(const std::vector<boost::filesystem::path>& lcpFilenames, const
     return lcpFound;
 }
 
-
-
-
 void undistortVignetting(aliceVision::image::Image<aliceVision::image::RGBAfColor>& img, const std::vector<float>& vparam, const float focX, const float focY, const float imageXCenter = 0.5, const float imageYCenter = 0.5)
 {
+    float p1 = -vparam[0];
+    float p2 = vparam[0] * vparam[0] - vparam[1];
+    float p3 = -(vparam[0] * vparam[0] * vparam[0] - 2 * vparam[0] * vparam[1] + vparam[2]);
+    float p4 = vparam[0] * vparam[0] * vparam[0] * vparam[0] + vparam[1] * vparam[1] + 2 * vparam[0] * vparam[2] - 3 * vparam[0] * vparam[0] * vparam[1];
 
 #pragma omp parallel for
     for (int j = 0; j < img.Height(); ++j)
         for (int i = 0; i < img.Width(); ++i)
         {
-            const aliceVision::Vec2 pix(i, j);
-            // compute coordinates with distortion
-            const Vec2 disto_pix = intrinsicPtr->get_d_pixel(undisto_pix + ppCorrection);
+            const aliceVision::Vec2 p(i, j);
 
-            aliceVision::Vec2 pp = getPrincipalPoint();
+            aliceVision::Vec2 np;
+            np(0) = ((p(0) / img.Width()) - imageXCenter) / focX;
+            np(1) = ((p(1) / img.Height()) - imageYCenter) / focY;
 
-            np(0) = (p(0) - pp(0)) / _scale(0);
-            np(1) = (p(1) - pp(1)) / _scale(1);
+            const float rsqr = np(0) * np(0) + np(1) * np(1);
+            const float gain = 1.f + p1 * rsqr + p2 * rsqr * rsqr + p3 * rsqr * rsqr * rsqr + p4 * rsqr * rsqr * rsqr * rsqr;
 
-
-
-
-            // pick pixel if it is in the image domain
-            if (imageIn.Contains(disto_pix(1), disto_pix(0)))
-                image_ud(j, i) = sampler(imageIn, disto_pix(1), disto_pix(0));
+            img(j, i) *= gain;
         }
-
-
-
-
 }
+
+
 
