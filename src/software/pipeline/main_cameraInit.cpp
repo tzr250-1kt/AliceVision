@@ -448,7 +448,7 @@ int aliceVision_main(int argc, char **argv)
 
   std::map<std::string, LCPinfo> lcpStore;
 
-  //#pragma omp parallel for
+  #pragma omp parallel for
   for(int i = 0; i < sfmData.getViews().size(); ++i)
   {
     sfmData::View& view = *(std::next(viewPairItBegin,i)->second);
@@ -680,6 +680,7 @@ int aliceVision_main(int argc, char **argv)
 
         LensParam lensParam;
         lcpData.getDistortionParams(focalLength, focusDistance, lensParam);
+        lcpData.getVignettingParams(focalLength, focusDistance, lensParam);
 
         std::shared_ptr<camera::IntrinsicsScaleOffsetDisto> intrinsicDisto = std::dynamic_pointer_cast<camera::IntrinsicsScaleOffsetDisto>(intrinsicBase);
         if (intrinsicDisto)
