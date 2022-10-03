@@ -830,6 +830,23 @@ int aliceVision_main(int argc, char **argv)
       vitem.second->addMetadata("AliceVision:useWhiteBalance", (useInternalWhiteBalance)?"1":"0");
     }
   }
+
+  //Check unique frame id per rig element
+  {
+    std::set<std::tuple<IndexT, IndexT, IndexT>> unique_ids;
+    for (auto vitem : sfmData.getViews())
+    {
+      std::tuple<IndexT, IndexT, IndexT> tuple = {vitem.second->getRigId(), vitem.second->getSubPoseId(), vitem.second->getFrameId()};
+
+      if (unique_ids.find(tuple) != unique_ids.end())
+      {
+        ALICEVISION_LOG_ERROR("Multiple frames have the same frame id.");
+        return EXIT_FAILURE;
+      }
+
+      unique_ids.insert(tuple);
+    }
+  }
   
   // store SfMData views & intrinsic data
   if(!Save(sfmData, outputFilePath, ESfMData(VIEWS|INTRINSICS|EXTRINSICS)))
