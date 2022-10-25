@@ -475,7 +475,8 @@ void LCPinfo::load(const std::string& filename, bool fullParsing)
 {
     XML_Parser parser = XML_ParserCreate(nullptr);
 
-    if (!parser) {
+    if (!parser)
+    {
         throw std::runtime_error("Couldn't allocate memory for XML parser");
     }
 
@@ -894,7 +895,7 @@ std::string reduceString(const std::string& str)
     return localStr;
 }
 
-std::vector<std::string> reduceStrings(std::vector<std::string>& v_str)
+std::vector<std::string> reduceStrings(const std::vector<std::string>& v_str)
 {
     std::vector<std::string> v_localStr;
     for (auto& s : v_str)
@@ -914,7 +915,13 @@ bool findLCPInfo(const std::string& dbDirectoryname, const std::string& cameraMo
     return findLCPInfo(v_lcpFilename, cameraModelOrMaker, lensModel, lensID, rawMode, lcpData, omitCameraModel);
 }
 
-bool findLCPInfo(const std::vector<boost::filesystem::path>& lcpFilenames, const std::string& cameraModelOrMaker, const std::string& lensModel, const int& lensID, int rawMode, LCPinfo& lcpData, bool omitCameraModel)
+bool findLCPInfo(const std::vector<boost::filesystem::path>& lcpFilenames,
+                 const std::string& cameraModelOrMaker,
+                 const std::string& lensModel,
+                 const int& lensID,
+                 int rawMode,
+                 LCPinfo& lcpData,
+                 bool omitCameraModel)
 {
     std::string reducedCameraModel = reduceString(cameraModelOrMaker);
     std::string reducedLensModel = reduceString(lensModel);
