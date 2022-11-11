@@ -869,30 +869,14 @@ void parseDirectory(const boost::filesystem::path& p, std::vector<boost::filesys
 
 std::string reduceString(const std::string& str)
 {
-    std::string localStr = str;
+    std::string s = str;
 
-    // remove all space
-    localStr.erase(std::remove(localStr.begin(), localStr.end(), ' '), localStr.end());
-    // remove all '/'
-    localStr.erase(std::remove(localStr.begin(), localStr.end(), '/'), localStr.end());
-    // remove all '.'
-    localStr.erase(std::remove(localStr.begin(), localStr.end(), '.'), localStr.end());
-    // remove all '_'
-    localStr.erase(std::remove(localStr.begin(), localStr.end(), '_'), localStr.end());
-    // remove all '-'
-    localStr.erase(std::remove(localStr.begin(), localStr.end(), '-'), localStr.end());
-    // remove all '*'
-    localStr.erase(std::remove(localStr.begin(), localStr.end(), '*'), localStr.end());
-    // remove all ','
-    localStr.erase(std::remove(localStr.begin(), localStr.end(), ','), localStr.end());
-    // remove all ';'
-    localStr.erase(std::remove(localStr.begin(), localStr.end(), ';'), localStr.end());
-    // remove all ':'
-    localStr.erase(std::remove(localStr.begin(), localStr.end(), ':'), localStr.end());
+    // remove non-alphanumeric characters
+    s.erase(std::remove_if(s.begin(), s.end(), [](char c) { return !std::isalnum(c); }), s.end());
     // to lowercase
-    boost::algorithm::to_lower(localStr);
+    boost::algorithm::to_lower(s);
 
-    return localStr;
+    return s;
 }
 
 std::vector<std::string> reduceStrings(const std::vector<std::string>& v_str)
