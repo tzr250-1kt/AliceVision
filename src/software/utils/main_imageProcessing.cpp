@@ -261,7 +261,6 @@ struct ProcessingParams
     {
         false, // enable
         3,     // width
-
         1.0f,  // contrast
         0.0f   // threshold
     };
@@ -293,7 +292,7 @@ struct ProcessingParams
     {
         false, // enable
         5.0f,  // filterStrength
-        5.0f,  // filterStrengthColor
+        10.0f, // filterStrengthColor
         7,     // templateWindowSize
         21     // searchWindowSize
     };
@@ -447,8 +446,7 @@ void processImage(image::Image<image::RGBAfColor>& image, const ProcessingParams
     if(pParams.nlmFilter.enabled)
     {
 #if ALICEVISION_IS_DEFINED(ALICEVISION_HAVE_OPENCV)
-
-        // Create temporary OpenCV Mat (keep only 3 Channels) to handled Eigen data of our image
+        // Create temporary OpenCV Mat (keep only 3 channels) to handle Eigen data of our image
         cv::Mat openCVMatIn = image::imageRGBAToCvMatBGR(image, CV_8UC3);
         cv::Mat openCVMatOut(image.Width(), image.Height(), CV_8UC3);
 
@@ -456,7 +454,7 @@ void processImage(image::Image<image::RGBAfColor>& image, const ProcessingParams
                                         pParams.nlmFilter.filterStrengthColor, pParams.nlmFilter.templateWindowSize,
                                         pParams.nlmFilter.searchWindowSize);
 
-        // Copy filtered data from openCV Mat(3 channels) to our image(keep the alpha channel unfiltered)
+        // Copy filtered data from OpenCV Mat(3 channels) to our image (keep the alpha channel unfiltered)
         image::cvMatBGRToImageRGBA(openCVMatOut, image);
 
 #else
