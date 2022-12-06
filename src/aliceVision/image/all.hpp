@@ -27,5 +27,4 @@
 #include "aliceVision/image/Rgb.hpp"
 #include "aliceVision/image/Sampler.hpp"
 #include "aliceVision/image/convertionOpenCV.hpp"
-
-
+#include "aliceVision/image/caching.hpp"

@@ -20,6 +20,7 @@ set(image_files_headers
   Rgb.hpp
   Sampler.hpp
   cache.hpp
+  caching.hpp
 )
 
 # Sources
@@ -30,6 +31,7 @@ set(image_files_sources
   io.cpp
   imageAlgo.cpp
   cache.cpp
+  caching.cpp
 )
 
 alicevision_add_library(aliceVision_image
@@ -55,3 +57,4 @@ alicevision_add_test(io_test.cpp         NAME "image_io"         LINKS aliceVisi
 alicevision_add_test(drawing_test.cpp    NAME "image_drawing"    LINKS aliceVision_image)
 alicevision_add_test(filtering_test.cpp  NAME "image_filtering"  LINKS aliceVision_image)
 alicevision_add_test(resampling_test.cpp NAME "image_resampling" LINKS aliceVision_image)
+alicevision_add_test(caching_test.cpp    NAME "caching"          LINKS aliceVision_image)
